@@ -5,7 +5,7 @@ from gmail_handler import authenticate_gmail, fetch_unread_emails, send_email
 from task_manager import TaskManager
 
 app = Flask(__name__)
-app.secret_key = 'its a secret'  
+app.secret_key = 'its a secret .'  
 task_manager = TaskManager('mongodb+srv://test:test123@cluster0.htaswor.mongodb.net/?retryWrites=true&w=majority', 'DB_PFA')
 
 
