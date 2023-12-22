@@ -9,24 +9,33 @@ import base64
 from bs4 import BeautifulSoup
 import dateutil.parser as parser
 
-def authenticate_gmail():
-    # Creating a storage.JSON file with authentication details
-    SCOPES = 'https://www.googleapis.com/auth/gmail.modify'
-    store = file.Storage('storage.json')
-    creds = store.get()
-    if not creds or creds.invalid:
-        flow = client.flow_from_clientsecrets('client_secret.json', SCOPES)
-        creds = tools.run_flow(flow, store)
-    GMAIL = discovery.build('gmail', 'v1', http=creds.authorize(Http()))
+import os
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
 
-    # Get the authenticated user's email address
+def authenticate_gmail():
+    SCOPES = 'https://www.googleapis.com/auth/gmail.modify'
+    storage_path = os.path.join(os.path.dirname(__file__), 'storage.json')
+    client_secret_path = os.path.join(os.path.dirname(__file__), 'client_secret.json')
+
+    store = file.Storage(storage_path)
+    creds = store.get()
+
+    if not creds or creds.invalid:
+        flow = client.flow_from_clientsecrets(client_secret_path, SCOPES)
+        creds = tools.run_flow(flow, store)
+
+    GMAIL = discovery.build('gmail', 'v1', http=creds.authorize(Http()))
     user_info = GMAIL.users().getProfile(userId='me').execute()
     email_address = user_info['emailAddress']
     print(f"Authenticated as: {email_address}")
-   #the user to the session
+   
     session['user_email'] = email_address
 
-    return GMAIL , email_address
+    return GMAIL, email_address
+
 def fetch_unread_emails(num_emails=5):
     GMAIL, user_email = authenticate_gmail()
 
