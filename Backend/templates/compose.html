@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Compose Email</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+
+      .navbar {
+        background-color: #555;
+        padding: 15px;
+        text-align: center;
+        color: white;
+      }
+
+      .navbar a {
+        text-decoration: none;
+        color: #fff;
+        margin: 0 15px;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      input,
+      textarea,
+      button {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+
+      button {
+        background-color: #4caf50;
+        color: white;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      /* Toast styling */
+      #toast {
+        visibility: hidden;
+        min-width: 250px;
+        margin-left: -125px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        border-radius: 2px;
+        padding: 16px;
+        position: fixed;
+        z-index: 1;
+        left: 50%;
+        bottom: 30px;
+        font-size: 17px;
+      }
+
+      #toast.show {
+        visibility: visible;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="navbar">
+      <a href="{{ url_for('index') }}"
+        ><i class="fas fa-tasks"></i> Task Manager</a
+      >
+      <a href="{{ url_for('logout') }}">Logout</a>
+      <a href="{{ url_for('fetch_emails') }}">List Emails</a>
+    </div>
+
+    <div class="container">
+      <h1>Compose Email</h1>
+      <form
+        method="post"
+        action="{{ url_for('compose_email') }}"
+        onsubmit="showToast()"
+      >
+        <label for="to">To:</label>
+        <input type="email" id="to" name="to" required />
+        <br />
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" name="subject" required />
+        <br />
+        <label for="body">Body:</label>
+        <textarea id="body" name="body" rows="4" required></textarea>
+        <br />
+        <button type="submit">Send <i class="fas fa-paper-plane"></i></button>
+      </form>
+    </div>
+
+    <!-- Toast notification -->
+    <div id="toast">Email sent successfully!</div>
+
+    <script>
+      function showToast() {
+        var toast = document.getElementById("toast");
+        toast.className = "show";
+        setTimeout(function () {
+          toast.className = toast.className.replace("show", "");
+        }, 5000);
+      }
+    </script>
+  </body>
+</html>

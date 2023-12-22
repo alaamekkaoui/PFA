@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Manager - Task List</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        body {
+            font-family: "Arial", sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .cover-container {
+            max-width: 42em;
+            margin: auto;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .nav-masthead {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .nav-masthead .nav-link {
+            color: #fff;
+            margin-right: 1rem;
+        }
+
+        .nav-masthead .active {
+            color: #fff;
+        }
+
+        .nav-masthead .nav-link:hover {
+            color: #fff;
+            border-bottom-color: #fff;
+        }
+
+        .nav-masthead .fa-tasks {
+            margin-right: 0.5em;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #ffffff; /* White background for content */
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            color: #495057; /* Text color for content */
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #343a40; /* Heading color */
+        }
+
+        .table th,
+        .table td {
+            text-align: center;
+        }
+
+        .table th {
+            background-color: #495057; /* Heading background color */
+            color: #fff; /* Heading text color */
+        }
+
+        .table td {
+            background-color: #f8f9fa; /* Row background color */
+        }
+
+        .btn-info,
+        .btn-danger {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .btn-info i,
+        .btn-danger i {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column h-100">
+    <!-- Navbar -->
+    <header class="masthead mb-auto">
+        <div class="inner">
+            <nav class="nav-masthead">
+                <a class="nav-link active" href="/">
+                    <i class="fas fa-tasks"></i> Task Manager
+                </a>
+                <span class="navbar-text">{{ user_email }}</span>
+                <a class="nav-link" href="/logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="cover-container">
+        <div class="container mt-5">
+            <h1 class="text-center">Task Manager - Task List</h1>
+
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <h2 class="text-center">Personal Tasks</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Task ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Completed</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasks %} {% if task["category"] == "personal" %}
+                            <tr>
+                                <td>{{ task["numeric_id"] }}</td>
+                                <td>{{ task["name"] }}</td>
+                                <td>{% if task["description"] %} {{ task["description"] }} {% else %} - {% endif %}
+                                </td>
+                                <td>{% if task["date"] %} {{ task["date"].strftime('%Y-%m-%d') }} {% else %} Empty
+                                    {% endif %}
+                                </td>
+                                <td>{{ task["completed"] }}</td>
+                                <td>
+                                    <div class="d-flex flex-column align-items-center">
+                                        <a href="/update/{{ task["numeric_id"] }}"
+                                            class="btn btn-info btn-sm mb-2"><i class="fas fa-edit"></i> Update</a>
+                                        <a href="/delete/{{ task["numeric_id"] }}"
+                                            class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endif %} {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <h2 class="text-center">Work Tasks</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Task ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Completed</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasks %} {% if task["category"] == "work" %}
+                            <tr>
+                                <td>{{ task["numeric_id"] }}</td>
+                                <td>{{ task["name"] }}</td>
+                                <td>{% if task["description"] %} {{ task["description"] }} {% else %} - {% endif %}
+                                </td>
+                                <td>{% if task["date"] %} {{ task["task_date"].strftime('%Y-%m-%d') }} {% else %} Empty
+                                    {% endif %}
+                                </td>
+                                <td>{{ task["completed"] }}</td>
+                                <td>
+                                    <div class="d-flex flex-column align-items-center">
+                                        <a href="/update/{{ task["numeric_id"] }}"
+                                            class="btn btn-info btn-sm mb-2"><i class="fas fa-edit"></i> Update</a>
+                                        <a href="/delete/{{ task["numeric_id"] }}"
+                                            class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endif %} {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+</body>
+
+</html>

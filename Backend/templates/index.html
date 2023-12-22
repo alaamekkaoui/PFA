@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home - Task Manager</title>
+
+    <!-- Bootstrap CSS link -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Raleway:wght@400&display=swap"
+    />
+
+    <!-- Font Awesome CSS link -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    />
+
+    <!-- Custom Cover Template CSS -->
+    <link href="cover.css" rel="stylesheet" />
+
+    <style>
+      body {
+        background-color: rgba(0, 0, 0, 0.7);
+        font-family: "Raleway", sans-serif;
+        margin: 0;
+        padding: 0;
+        text-shadow: 0 0.05rem 0.1rem rgba(0, 0, 0, 0.5);
+        box-shadow: inset 0 0 5rem rgba(0, 0, 0, 0.5);
+      }
+
+      .cover-container {
+        max-width: 42em;
+        margin: auto;
+      }
+
+      .navbar {
+        background-color: rgba(255, 255, 255, 0.015);
+        color: #eae0d5;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: "Raleway", sans-serif; /* Apply Raleway font */
+      }
+
+      .navbar-brand {
+        font-size: 2em;
+        color: #fff;
+        border-bottom: 0.25rem solid transparent;
+        margin-right: 0.5em;
+      }
+
+      .navbar-brand:hover,
+      .navbar-brand:focus {
+        border-bottom-color: rgba(255, 255, 255, 0.25);
+      }
+
+      .nav-item {
+        margin-left: 1rem;
+      }
+
+      .nav-link {
+        color: rgba(255, 255, 255, 0.5);
+        border-bottom: 0.25rem solid transparent;
+      }
+
+      .nav-link:hover,
+      .nav-link:focus {
+        color: #fff;
+        border-bottom-color: #fff;
+      }
+
+      .nav-link.active {
+        color: #fff;
+        border-bottom-color: #fff;
+      }
+
+      main {
+        text-align: center;
+        padding: 2em;
+        color: #fff; /* Text color for the main content */
+      }
+
+      h1 {
+        color: #fff;
+        font-size: 3em;
+        margin-bottom: 1em;
+      }
+
+      p {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1.25em;
+        margin-bottom: 2em;
+      }
+
+      .btn-lg {
+        font-size: 1.5em;
+        font-weight: bold;
+        padding: 0.5em 1em;
+      }
+
+      footer {
+        margin-top: auto;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.5);
+      }
+    </style>
+  </head>
+
+  <body class="d-flex flex-column h-100">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-tasks"></i> Task Manager
+      </a>
+      <div class="collapse navbar-collapse justify-content-end">
+        <ul class="navbar-nav">
+          {% if user_email %}
+          <!-- User is logged in, show user information and logout link -->
+          <li class="nav-item">
+            <p class="nav-link">{{ user_email }}</p>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/compose">
+              <i class="fas fa-pencil-alt"></i> Compose Email
+            </a>
+          </li>
+          {% else %}
+          <!-- User is not logged in, show login link -->
+          <li class="nav-item">
+            <a class="nav-link" href="/login">
+              <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+      <h1>
+        Welcome, {% if user_email %}{{ user_email.split('@')[0] }}{% else
+        %}Guest{% endif %}!
+      </h1>
+      <p>This is your Task Manager home page. Manage your tasks efficiently.</p>
+      <a
+        href="/add_task"
+        class="btn btn-lg btn-light fw-bold border-white bg-white"
+      >
+        <i class="fas fa-plus"></i> Add Task
+      </a>
+      <a
+        href="/list_tasks"
+        class="btn btn-lg btn-light fw-bold border-white bg-white"
+      >
+        <i class="fas fa-list"></i> List Tasks
+      </a>
+      <a
+        href="/fetch_emails"
+        class="btn btn-lg btn-light fw-bold border-white bg-white"
+      >
+        <i class="fas fa-envelope"></i> View Emails
+      </a>
+      <div>
+        <p>
+          Short description of the website goes here. You can provide
+          information about the features and benefits of using the Task Manager.
+        </p>
+      </div>
+    </main>
+
+    <!-- Bootstrap JS and Popper.js scripts -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

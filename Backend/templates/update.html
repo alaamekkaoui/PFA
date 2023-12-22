@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Update Task</title>
+    <link
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"
+    />
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    />
+    <style>
+        body {
+            font-family: "Arial", sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-group {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .form-check {
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="text-center">Update Task</h1>
+    <form action="/update/{{ task.numeric_id }}" method="post">
+        <!-- Task Name -->
+        <div class="form-group">
+            <label for="name">Task Name:</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    name="name"
+                    value="{{ task.name }}"
+                    required
+            />
+        </div>
+        <!-- Task Description -->
+        <div class="form-group">
+            <label for="description">Task Description:</label>
+            <textarea
+                    class="form-control"
+                    id="description"
+                    name="description"
+                    required
+            >{{ task.description }}</textarea>
+        </div>
+        <!-- Task Category -->
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <select
+                    class="form-control"
+                    id="category"
+                    name="category"
+                    required
+            >
+                <option value="personal" {% if task.category == 'personal' %}selected{% endif %}>Personal</option>
+                <option value="work" {% if task.category == 'work' %}selected{% endif %}>Work</option>
+            </select>
+        </div>
+        <!-- Completed Checkbox -->
+        <div class="form-group form-check">
+            <input
+                    type="checkbox"
+                    class="form-check-input"
+                    id="completed"
+                    name="completed"
+                    {% if task.completed %}checked{% endif %}
+            />
+            <label class="form-check-label" for="completed">Completed</label>
+        </div>
+        <!-- Update Task Button -->
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Update Task
+        </button>
+    </form>
+</div>
+
+<!-- Bootstrap JS dependencies -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>
