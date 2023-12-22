@@ -1,5 +1,6 @@
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import os
 from apiclient import discovery
 from apiclient import errors
 from flask import session
@@ -8,13 +9,11 @@ from oauth2client import file, client, tools
 import base64
 from bs4 import BeautifulSoup
 import dateutil.parser as parser
-
-import os
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
-from googleapiclient.discovery import build
-
+from task_manager import TaskManager
+from datetime import datetime
+from flask import session
+from bs4 import BeautifulSoup
+from task_manager import TaskManager
 def authenticate_gmail():
     SCOPES = 'https://www.googleapis.com/auth/gmail.modify'
     storage_path = os.path.join(os.path.dirname(__file__), 'storage.json')
@@ -135,3 +134,95 @@ def send_message(service, user_id, message):
         return sent_message
     except errors.HttpError as error:
         print('An error occurred: %s' % error)
+
+from gmail_handler import fetch_unread_emails
+def parse_date(date_str):
+    # Define a list of potential date formats
+    date_formats = ['%Y-%m-%d', '%d-%m-%Y', '%m-%d-%Y', '%Y/%m/%d', '%d/%m/%Y', '%m/%d/%Y']
+
+    # Try parsing the date using each format
+    for date_format in date_formats:
+        try:
+            formatted_date = datetime.strptime(date_str, date_format).date()
+            return formatted_date
+        except ValueError:
+            pass  # Continue to the next format if the current one fails
+
+    # If none of the formats are successful
+    return None
+def strip_html_tags(html):
+    # If html is not a string, convert it to a string
+    if not isinstance(html, str):
+        html = str(html)
+
+    # Use BeautifulSoup to parse and then get text content
+    soup = BeautifulSoup(html, 'html.parser')
+    text_content = soup.get_text(separator=' ', strip=True)
+    
+    # Remove extra whitespaces
+    clean_text = ' '.join(text_content.split())
+
+    return clean_text
+def get_meeting_data(email_data):
+    # Extract necessary data from the email
+    subject = email_data.get('Subject', 'No Subject')
+    date_str = email_data.get('Date', '')
+    body = email_data.get('Message_body', 'No Body')
+
+    # Parse the date using multiple formats
+    formatted_date = parse_date(date_str)
+
+    if formatted_date is None:
+        return None  # Unable to parse the date
+
+    # Assume the email body contains a summary of the meeting
+    summary = body
+
+    return {
+        'subject': subject,
+        'date': formatted_date,
+        'summary': summary
+    }
+
+def add_meeting_to_db():
+    task_manager = TaskManager('mongodb+srv://test:test123@cluster0.htaswor.mongodb.net/?retryWrites=true&w=majority', 'DB_PFA')
+    user_email = session.get('user_email')
+
+    if not user_email:
+        return "User not authenticated. Cannot add meeting from email to the database."
+
+    # Fetch unread emails
+    unread_emails = fetch_unread_emails()
+
+    if not unread_emails:
+        return "No unread emails found."
+
+      # Process the first unread email
+    email_data = unread_emails[0]
+    subject = email_data.get('Subject', 'No Subject')
+    date_str = email_data.get('Date', '')
+    body = email_data.get('Message_body', 'No Body')
+
+    # Parse the date using multiple formats
+    formatted_date = parse_date(date_str)
+
+    if formatted_date is None:
+        return "Unable to parse the date from the email. Please provide a valid date format."
+
+    # Strip HTML tags from the body
+    summary = strip_html_tags(body)
+
+    # Add the meeting to the database
+    category = 'Meeting'
+    result = task_manager.add_task(
+        user_email=user_email,
+        name=subject,
+        description=summary,
+        category=category,
+        finish_date=formatted_date
+    )
+
+    # Print the result
+    print(result)
+
+    return result

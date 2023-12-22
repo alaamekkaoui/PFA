@@ -1,7 +1,7 @@
 from datetime import datetime
 import os
 from flask import Flask, render_template, request, redirect , session, url_for
-from gmail_handler import authenticate_gmail, fetch_unread_emails, send_email
+from gmail_handler import authenticate_gmail, fetch_unread_emails, send_email,add_meeting_to_db
 from task_manager import TaskManager
 
 app = Flask(__name__)
@@ -94,6 +94,22 @@ def compose_email():
         return redirect(url_for('compose_email'))  # Redirect to inbox after sending email
 
     return render_template('compose.html')
+
+
+@app.route('/complete/<numeric_id>')
+def complete_task(numeric_id):
+    if 'user_email' in session:
+        user_email = session['user_email']
+        result = task_manager.update_completion_status(int(numeric_id), True)
+        return redirect(url_for('list_tasks'))
+    else:
+        return redirect(url_for('login'))
+    
+@app.route('/add_meeting')
+def add_meeting():
+    # Add meeting from the first unread email to the database
+    result = add_meeting_to_db()
+    return f"Result: {result}"
 
 if __name__ == '__main__':
     app.run(debug=True)

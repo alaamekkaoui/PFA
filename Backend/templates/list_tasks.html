@@ -14,7 +14,7 @@
         }
 
         .cover-container {
-            max-width: 42em;
+            max-width: 100%;
             margin: auto;
             padding: 1.5rem;
             text-align: center;
@@ -48,11 +48,11 @@
         }
 
         .container {
-            max-width: 800px;
-            margin: 20px auto;
+            max-width: 1400px;
+            margin: 200px auto;
             background-color: #ffffff; /* White background for content */
-            padding: 20px;
-            border-radius: 5px;
+            padding: 60px;
+            border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             color: #495057; /* Text color for content */
         }
@@ -66,6 +66,7 @@
         .table th,
         .table td {
             text-align: center;
+            white-space: nowrap; /* Prevent line break for date */
         }
 
         .table th {
@@ -78,13 +79,15 @@
         }
 
         .btn-info,
-        .btn-danger {
+        .btn-danger,
+        .btn-update {
             width: 100%;
             margin-bottom: 5px;
         }
 
         .btn-info i,
-        .btn-danger i {
+        .btn-danger i,
+        .btn-update i {
             margin-right: 5px;
         }
     </style>
@@ -110,88 +113,52 @@
         <div class="container mt-5">
             <h1 class="text-center">Task Manager - Task List</h1>
 
-            <div class="row mt-4">
-                <div class="col-md-12">
-                    <h2 class="text-center">Personal Tasks</h2>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Task ID</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Description</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Completed</th>
-                                <th scope="col">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for task in tasks %} {% if task["category"] == "personal" %}
-                            <tr>
-                                <td>{{ task["numeric_id"] }}</td>
-                                <td>{{ task["name"] }}</td>
-                                <td>{% if task["description"] %} {{ task["description"] }} {% else %} - {% endif %}
-                                </td>
-                                <td>{% if task["date"] %} {{ task["date"].strftime('%Y-%m-%d') }} {% else %} Empty
+            <!-- Task Categories -->
+            {% for category in ["personal", "work", "meeting"] %}
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h2 class="text-center">{{ category|capitalize }} Tasks</h2>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Task ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Completed</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for task in tasks %}
+                                    {% if task["category"] == category %}
+                                        <tr>
+                                            <td>{{ task["numeric_id"] }}</td>
+                                            <td>{{ task["name"] }}</td>
+                                            <td>{% if task["description"] %} {{ task["description"] }} {% else %} - {% endif %}</td>
+                                            <td>{% if task["finish_date"] %} {{ task["finish_date"].strftime('%d-%m-%Y') }} {% else %} Empty {% endif %}</td>
+                                            <td>{{ task["completed"] }}</td>
+                                            <td>
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <a href="/update/{{ task["numeric_id"] }}" class="btn btn-info btn-sm mb-2"><i class="fas fa-edit"></i> Update</a>
+                                                    {% if not task["completed"] %}
+                                                        <a href="/complete/{{ task["numeric_id"] }}" class="btn btn-update btn-sm"><i class="fas fa-check"></i> Update to Complete</a>
+                                                    {% endif %}
+                                                    <a href="/delete/{{ task["numeric_id"] }}" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> Delete</a>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     {% endif %}
-                                </td>
-                                <td>{{ task["completed"] }}</td>
-                                <td>
-                                    <div class="d-flex flex-column align-items-center">
-                                        <a href="/update/{{ task["numeric_id"] }}"
-                                            class="btn btn-info btn-sm mb-2"><i class="fas fa-edit"></i> Update</a>
-                                        <a href="/delete/{{ task["numeric_id"] }}"
-                                            class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endif %} {% endfor %}
-                        </tbody>
-                    </table>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-
-            <div class="row mt-4">
-                <div class="col-md-12">
-                    <h2 class="text-center">Work Tasks</h2>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Task ID</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Description</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Completed</th>
-                                <th scope="col">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for task in tasks %} {% if task["category"] == "work" %}
-                            <tr>
-                                <td>{{ task["numeric_id"] }}</td>
-                                <td>{{ task["name"] }}</td>
-                                <td>{% if task["description"] %} {{ task["description"] }} {% else %} - {% endif %}
-                                </td>
-                                <td>{% if task["date"] %} {{ task["task_date"].strftime('%Y-%m-%d') }} {% else %} Empty
-                                    {% endif %}
-                                </td>
-                                <td>{{ task["completed"] }}</td>
-                                <td>
-                                    <div class="d-flex flex-column align-items-center">
-                                        <a href="/update/{{ task["numeric_id"] }}"
-                                            class="btn btn-info btn-sm mb-2"><i class="fas fa-edit"></i> Update</a>
-                                        <a href="/delete/{{ task["numeric_id"] }}"
-                                            class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endif %} {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </main>
 
+    <!-- Scripts (jQuery, Bootstrap, Font Awesome) -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>

@@ -99,17 +99,6 @@
                 <option value="work" {% if task.category == 'work' %}selected{% endif %}>Work</option>
             </select>
         </div>
-        <!-- Completed Checkbox -->
-        <div class="form-group form-check">
-            <input
-                    type="checkbox"
-                    class="form-check-input"
-                    id="completed"
-                    name="completed"
-                    {% if task.completed %}checked{% endif %}
-            />
-            <label class="form-check-label" for="completed">Completed</label>
-        </div>
         <!-- Update Task Button -->
         <button type="submit" class="btn btn-primary">
             <i class="fas fa-save"></i> Update Task
