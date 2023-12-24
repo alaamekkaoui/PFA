@@ -1,34 +1,29 @@
-## Database models          
-- work
-    - name 
-    - desc
-    - meeting 
-    - date of meeting 
-- personnal
-    - name 
-    - desc 
-    - task 
-    - complete / uncomplete
-
+## Last time tasks 
+- added support of gimini api 
+## What i need to do 
+- get details of email added to DB (using AI )
+- auto send email :
+  - create a prompt for AI 
+  - get ai response then send it 
 
 ## Task Manager
 - input :  time
-- fetch from gmail
 - list of task of the day 
-- notification when task is completed or soon (read it loud )
-
+- notification : 
+  - when task is completed or soon 
+  - new task added 
+  - AI response (maybe) 
 
 ## email handler file 
-- extract the date 
-- extract the meeting and add it in database (task list)
+- extract the date (done)
+- using Gimini API : 
+    - extract the meeting and add it in database (task list)
 ## task manager file 
 - add date 
 - index page for each of categories 
 
 ## modele
-- add the date
+- add the date nad hour
 
 ## Front end 
-- add home button for each of the pages
-- can reorgnize this md file and add list of done task i will added manully 
-- home page without email so when I log out it shows page
+- need some tweaks
