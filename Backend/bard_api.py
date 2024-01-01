@@ -28,7 +28,7 @@ def to_markdown(text):
 
 
 # Set up your API key
-GOOGLE_API_KEY = 'Use your Damn Key'
+GOOGLE_API_KEY = 'AIzaSyCbPhOCx7wcrm_Y_z6FtR5lMKYhKkPSOsk'
 configure_api(GOOGLE_API_KEY)
 
 # Initialize the generative model
