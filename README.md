@@ -31,3 +31,5 @@ Task Manager is a simple web application that helps you manage your tasks effici
    ```bash
    git clone https://github.com/alaamekkaoui/PFA.git
    cd PFA
+   pip install -r requirements.txt
+   
