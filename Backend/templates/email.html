@@ -30,7 +30,8 @@
 
     <style>
       body {
-        background-color: #f8f9fa; /* Gray background */
+        background-color: #f8f9fa;
+        /* Gray background */
         font-family: "Raleway", sans-serif;
         margin: 0;
         padding: 0;
@@ -59,17 +60,20 @@
       .container {
         max-width: 800px;
         margin: 20px auto;
-        background-color: #ffffff; /* White background for content */
+        background-color: #ffffff;
+        /* White background for content */
         padding: 20px;
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        color: #495057; /* Text color for content */
+        color: #495057;
+        /* Text color for content */
       }
 
       h1 {
         text-align: center;
         margin-bottom: 20px;
-        color: #343a40; /* Heading color */
+        color: #343a40;
+        /* Heading color */
       }
 
       table {
@@ -87,12 +91,20 @@
       }
 
       th {
-        background-color: #495057; /* Heading background color */
-        color: #fff; /* Heading text color */
+        background-color: #495057;
+        /* Heading background color */
+        color: #fff;
+        /* Heading text color */
       }
 
       td {
-        background-color: #f8f9fa; /* Row background color */
+        background-color: #f8f9fa;
+        /* Row background color */
+      }
+
+      .btn-meeting,
+      .btn-confirmation {
+        margin-right: 5px;
       }
     </style>
   </head>
@@ -134,6 +146,7 @@
                 <th scope="col">Date</th>
                 <th scope="col">Sender</th>
                 <th scope="col">Snippet</th>
+                <th scope="col">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -144,7 +157,27 @@
                 <td>{{ email["Sender"] }}</td>
                 <td>{{ email["Snippet"] }}</td>
                 <td>
-                  <!-- Add any additional actions or links here -->
+                  <!-- Add Meeting Button -->
+                  <a
+                    href="/add_meeting"
+                    class="btn btn-secondary btn-sm btn-meeting"
+                  >
+                    <i class="fas fa-calendar-plus"></i> Add Meeting
+                  </a>
+
+                  <!-- Send Confirmation Email Form -->
+                  <form
+                    action="/send_confirmation/{{ loop.index0 }}"
+                    method="post"
+                    style="display: inline"
+                  >
+                    <button
+                      type="submit"
+                      class="btn btn-primary btn-sm btn-confirmation"
+                    >
+                      <i class="fas fa-envelope"></i> Send Confirmation
+                    </button>
+                  </form>
                 </td>
               </tr>
               {% endfor %}
